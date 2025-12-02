@@ -1,4 +1,4 @@
-import 'use client';
+'use client';
 
 import css from './NoteDetails.module.css';
 import { useParams } from 'next/navigation';
