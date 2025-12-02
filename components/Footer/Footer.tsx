@@ -1,15 +1,17 @@
 import css from './Footer.module.css';
 
 export default function Footer() {
+  const emailAddress = 'liliia-dev@example.com';
+  const developerName = 'Liliia D.';
+
   return (
     <footer className={css.footer}>
       <div className={css.content}>
         <p>© {new Date().getFullYear()} NoteHub. All rights reserved.</p>
         <div className={css.wrap}>
-          <p>Developer: Liliia D.</p>
+          <p>Developer: {developerName}</p>
           <p>
-            Contact us:
-            <a href="mailto:lilydalas88@gmail.com">lilydalas88@gmail.com</a>
+            Contact us: <a href={`mailto:${emailAddress}`}>{emailAddress}</a>
           </p>
         </div>
       </div>
