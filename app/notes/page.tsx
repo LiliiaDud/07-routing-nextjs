@@ -1,22 +1,13 @@
-import { dehydrate, QueryClient } from '@tanstack/react-query';
-import NotesClient from './Notes.client';
-import { fetchNotes } from '@/lib/api';
-import { HydrationBoundary } from '@tanstack/react-query';
+'use client';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
-export default async function Notes() {
-  const queryClient = new QueryClient();
+const RedirectToNewPath = () => {
+  const router = useRouter();
 
-  const page = 1;
-  const perPage = 12;
-  const search = '';
+  useEffect(() => {
+    router.push('/notes/filter/all');
+  }, [router]);
+};
 
-  await queryClient.prefetchQuery({
-    queryKey: ['notes', page, search],
-    queryFn: () => fetchNotes({ page, search, perPage }),
-  });
-  return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <NotesClient />
-    </HydrationBoundary>
-  );
-}
+export default RedirectToNewPath;

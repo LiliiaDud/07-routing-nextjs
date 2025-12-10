@@ -20,7 +20,7 @@ export default function NoteList({ notes }: NoteListProps) {
     },
   });
 
-  if (!notes.length) return null;
+  if (notes.length === 0) return <p className={css.empty}>No notes found.</p>;
 
   return (
     <ul className={css.list}>
