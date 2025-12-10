@@ -6,7 +6,7 @@ import { useDebounce } from 'use-debounce';
 import { useQuery } from '@tanstack/react-query';
 import { fetchNotes } from '@/lib/api';
 import { keepPreviousData } from '@tanstack/react-query';
-import { toast, Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 import SearchBox from '@/components/SearchBox/SearchBox';
 import Pagination from '@/components/Pagination/Pagination';
 import NoteList from '@/components/NoteList/NoteList';
@@ -26,16 +26,21 @@ export default function NotesClient({ tag }: Props) {
 
   const { data } = useQuery({
     queryKey: ['notes', page, debouncedSearch, tag],
-    queryFn: () => fetchNotes({ page, perPage, search: tag }),
+    queryFn: () => fetchNotes({ page, perPage, search: debouncedSearch, tag }),
     staleTime: 60 * 1000,
     placeholderData: keepPreviousData,
     refetchOnMount: false,
   });
 
+  const handleSearch = (newValue: string) => {
+    setPage(1);
+    setSearch(newValue);
+  };
+
   return (
     <div className={css.app}>
       <header className={css.toolbar}>
-        <SearchBox onChange={setSearch} />
+        <SearchBox onChange={handleSearch} value={search} />
 
         {data && data.totalPages > 1 && (
           <Pagination pageCount={data.totalPages} currentPage={page} onPageChange={setPage} />
@@ -46,7 +51,7 @@ export default function NotesClient({ tag }: Props) {
         </button>
       </header>
 
-      {data && data.notes.length > 0 && <NoteList notes={data.notes} />}
+      {data && <NoteList notes={data.notes} />}
 
       {isModalOpen && (
         <Modal onClose={() => setIsModalOpen(false)}>

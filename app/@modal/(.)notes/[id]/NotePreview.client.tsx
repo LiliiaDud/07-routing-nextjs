@@ -5,37 +5,41 @@ import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { fetchNoteById } from '@/lib/api';
-
 import { Note } from '@/types/note';
 
 export default function NotePreviewClient() {
   const router = useRouter();
   const close = () => router.back();
   const { id } = useParams<{ id: string }>();
-  const { data, isLoading, isError } = useQuery<Note>({
+  const {
+    data: note,
+    isLoading,
+    error,
+  } = useQuery<Note>({
     queryKey: ['note', id],
     queryFn: () => fetchNoteById(id),
     refetchOnMount: false,
   });
 
-  if (!data) return null;
+  if (isLoading) return <p>Loading, please wait...</p>;
+
+  if (error || !note) return <p>Something went wrong.</p>;
 
   return (
     <>
       <Modal onClose={close}>
         <div className={css.container}>
-          {isError && <p>Something went wrong.</p>}
-          {isLoading && <p>Loading, please wait...</p>}
-
-          {data && (
-            <div className={css.item}>
-              <h2>{data.title}</h2>
-              <p className={css.content}>{data.content}</p>
-              <p className={css.date}>Created date: {data.createdAt}</p>
-              <p className={css.tag}>{data.tag}</p>
+          <div className={css.item}>
+            <div className={css.header}>
+              <h2>{note.title}</h2>
             </div>
-          )}
-          <button onClick={close}>Close</button>
+            <p className={css.content}>{note.content}</p>
+            <p className={css.date}>{note.updatedAt || note.createdAt}</p>
+            <p className={css.tag}>{note.tag}</p>
+            <button className={css.backBtn} onClick={close}>
+              Go back
+            </button>
+          </div>
         </div>
       </Modal>
     </>
