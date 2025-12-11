@@ -34,7 +34,7 @@ export default function NotePreviewClient() {
               <h2>{note.title}</h2>
             </div>
             <p className={css.content}>{note.content}</p>
-            <p className={css.date}>{note.updatedAt || note.createdAt}</p>
+            <p className={css.date}>{note.createdAt}</p>
             <p className={css.tag}>{note.tag}</p>
             <button className={css.backBtn} onClick={close}>
               Go back
